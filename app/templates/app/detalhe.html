@@ -1,0 +1,167 @@
+{% extends "app/base.html" %}
+{% block title %}{{ rede.nome }} — {{ cfg.titulo_site }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">{% endblock %}
+
+{% block body %}
+<div class="public-wrap detalhe-wrap">
+
+  <header class="detalhe-header">
+    <a href="{{ url_for('main.index') }}" class="back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Voltar
+    </a>
+    <div class="signal-icon small">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- Barra de tempo restante -->
+  <div class="timer-bar" id="timerBar">
+    <div class="timer-inner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span id="timerLabel">A calcular…</span>
+      <div class="timer-progress-wrap">
+        <div class="timer-progress" id="timerProgress"></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="detalhe-main">
+    <div class="detalhe-card">
+
+      <div class="detalhe-top">
+        <div class="detalhe-badge">{{ rede.seguranca }}</div>
+        <h1 class="detalhe-nome">{{ rede.nome }}</h1>
+        {% if rede.descricao %}
+        <p class="detalhe-desc">{{ rede.descricao }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Tabs dos QR codes -->
+      <div class="qr-tabs-wrap">
+        <div class="qr-tabs">
+          <button class="qr-tab active" data-tab="wifi">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+            </svg>
+            Ligar ao WiFi
+          </button>
+          <button class="qr-tab" data-tab="pagina">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            Abrir Página
+          </button>
+        </div>
+      </div>
+
+      <!-- QR: ligar ao WiFi directamente -->
+      <div class="qr-section" id="tabWifi">
+        <div class="qr-label">Aponte a câmara para ligar ao WiFi</div>
+        <div class="qr-wrap">
+          <img
+            src="{{ url_for('main.rede_qr', rede_id=rede.id) }}"
+            alt="QR Code WiFi {{ rede.ssid }}"
+            class="qr-img"
+            width="200" height="200"
+            loading="lazy"
+          >
+          <div class="qr-corners">
+            <span class="c tl"></span><span class="c tr"></span>
+            <span class="c bl"></span><span class="c br"></span>
+          </div>
+        </div>
+        <div class="qr-hint">Liga directamente à rede <strong>{{ rede.ssid }}</strong></div>
+      </div>
+
+      <!-- QR: abrir esta página no browser -->
+      <div class="qr-section" id="tabPagina" style="display:none">
+        <div class="qr-label">Aponte a câmara para abrir esta página</div>
+        <div class="qr-wrap">
+          <img
+            src="{{ url_for('main.rede_qr_acesso', rede_id=rede.id) }}"
+            alt="QR Acesso à página"
+            class="qr-img"
+            width="200" height="200"
+            loading="lazy"
+          >
+          <div class="qr-corners">
+            <span class="c tl"></span><span class="c tr"></span>
+            <span class="c bl"></span><span class="c br"></span>
+          </div>
+        </div>
+        {% if cfg.ip_local %}
+        <div class="qr-hint">
+          URL: <code>http://{{ cfg.ip_local }}:{{ cfg.porta or '5000' }}/rede/{{ rede.id }}</code>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Credenciais -->
+      <div class="creds-section">
+        <div class="cred-row">
+          <span class="cred-label">Rede (SSID)</span>
+          <div class="cred-val-wrap">
+            <span class="cred-val" id="ssidVal">{{ rede.ssid }}</span>
+            <button class="copy-btn" data-copy="{{ rede.ssid }}" title="Copiar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="cred-divider"></div>
+
+        <div class="cred-row">
+          <span class="cred-label">Senha</span>
+          <div class="cred-val-wrap">
+            <span class="cred-val senha-val" id="senhaVal" data-real="{{ rede.senha }}">
+              <span class="dots">{{ '•' * rede.senha|length }}</span>
+              <span class="real" style="display:none">{{ rede.senha }}</span>
+            </span>
+            <button class="eye-btn" id="eyeBtn" title="Mostrar senha">
+              <svg class="eye-show" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="eye-hide" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+            <button class="copy-btn" data-copy="{{ rede.senha }}" title="Copiar senha">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="share-btn" id="shareBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        Partilhar
+      </button>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+  window.REDE_ID     = {{ rede.id }};
+  window.REDE_NOME   = "{{ rede.nome|e }}";
+  window.REDE_SSID   = "{{ rede.ssid|e }}";
+  window.REDE_SENHA  = "{{ rede.senha|e }}";
+  window.SEG_REST    = {{ segundos_restantes }};
+  window.ESTADO_URL  = "{{ url_for('api.api_estado_sessao') }}?rede_id={{ rede.id }}";
+</script>
+<script src="{{ url_for('static', filename='js/detalhe.js') }}"></script>
+{% endblock %}

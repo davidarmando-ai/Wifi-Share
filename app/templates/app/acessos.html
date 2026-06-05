@@ -1,0 +1,73 @@
+{% extends "app/base.html" %}
+{% block title %}Acessos — {{ rede.nome }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block body %}
+<div class="admin-wrap">
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <div class="signal-icon small"><span></span><span></span><span></span><span></span></div>
+      <span class="sidebar-name">{{ cfg.titulo_site }}</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('main.admin') }}" class="nav-item active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('main.nova_rede') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nova Rede
+      </a>
+      <a href="{{ url_for('main.configuracoes') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configurações
+      </a>
+      <a href="{{ url_for('main.index') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Ver Site
+      </a>
+    </nav>
+    <a href="{{ url_for('main.logout') }}" class="sidebar-logout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </a>
+  </aside>
+
+  <div class="admin-content">
+    <div class="admin-topbar anim-fade">
+      <div class="topbar-left">
+        <a href="{{ url_for('main.admin') }}" class="back-link">← Voltar</a>
+        <h2 class="admin-page-title">Acessos — {{ rede.nome }}</h2>
+      </div>
+      <span class="table-count">{{ acessos|length }} registo{% if acessos|length != 1 %}s{% endif %}</span>
+    </div>
+
+    <div class="table-card">
+      {% if acessos %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>IP</th>
+            <th>Dispositivo</th>
+            <th>Data / Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in acessos %}
+          <tr>
+            <td class="td-num">{{ loop.index }}</td>
+            <td class="td-mono">{{ a.ip or '—' }}</td>
+            <td class="td-ua" title="{{ a.user_agent }}">{{ a.user_agent[:60] if a.user_agent else '—' }}{% if a.user_agent and a.user_agent|length > 60 %}…{% endif %}</td>
+            <td class="td-date">{{ a.acessado_em }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="table-empty anim-fade">Ainda não há acessos registados para esta rede.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

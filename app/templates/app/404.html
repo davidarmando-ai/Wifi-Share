@@ -1,0 +1,11 @@
+{% extends "app/base.html" %}
+{% block title %}Página não encontrada{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">{% endblock %}
+{% block body %}
+<div class="public-wrap" style="justify-content:center;align-items:center;min-height:100vh;display:flex;flex-direction:column;gap:24px;text-align:center;">
+  <div class="signal-icon" style="opacity:.25"><span></span><span></span><span></span><span></span></div>
+  <h1 style="font-family:'Syne',sans-serif;font-size:5rem;font-weight:800;background:linear-gradient(135deg,var(--fg-muted),var(--fg-3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">404</h1>
+  <p style="color:var(--fg-3);font-size:.95rem;">Esta página não existe ou foi removida.</p>
+  <a href="{{ url_for('main.index') }}" class="back-btn" style="font-size:.88rem;"><span style="display:inline-flex;align-items:center;gap:6px;">← Voltar ao início</span></a>
+</div>
+{% endblock %}

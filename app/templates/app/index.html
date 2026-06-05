@@ -1,0 +1,66 @@
+{% extends "app/base.html" %}
+{% block title %}{{ cfg.titulo_site }} — Conecte-se{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">{% endblock %}
+
+{% block body %}
+<div class="public-wrap">
+
+  <header class="pub-header anim-slide-down">
+    <div class="pub-header-inner">
+      <div class="signal-icon">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="pub-header-text">
+        <h1 class="pub-title">{{ cfg.titulo_site }}</h1>
+        <p class="pub-sub">{{ cfg.subtitulo }}</p>
+      </div>
+    </div>
+    <a href="{{ url_for('main.login') }}" class="admin-link">Admin</a>
+  </header>
+
+  <main class="pub-main">
+    {% if redes %}
+      <p class="rede-count">{{ redes|length }} rede{% if redes|length != 1 %}s{% endif %} disponível{% if redes|length != 1 %}s{% endif %}</p>
+      <div class="cards-grid stagger">
+        {% for rede in redes %}
+        <a href="{{ url_for('main.rede_detalhe', rede_id=rede.id) }}" class="rede-card" data-id="{{ rede.id }}">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="wifi-bars">
+                <div class="bar b1"></div>
+                <div class="bar b2"></div>
+                <div class="bar b3"></div>
+                <div class="bar b4"></div>
+              </div>
+              <span class="card-badge">{{ rede.seguranca }}</span>
+            </div>
+            <div class="card-body">
+              <h2 class="card-nome">{{ rede.nome }}</h2>
+              {% if rede.descricao %}
+              <p class="card-desc">{{ rede.descricao }}</p>
+              {% endif %}
+            </div>
+            <div class="card-foot">
+              <span class="card-ssid">{{ rede.ssid }}</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-redes anim-fade-up">
+        <div class="no-signal">
+          <span></span><span></span><span></span>
+        </div>
+        <p>Nenhuma rede disponível de momento.</p>
+      </div>
+    {% endif %}
+  </main>
+
+  <footer class="pub-footer anim-fade">
+    <span>{{ cfg.titulo_site }}</span>
+  </footer>
+
+</div>
+{% endblock %}

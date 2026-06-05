@@ -1,0 +1,36 @@
+{% extends "app/base.html" %}
+{% block title %}Admin — {{ cfg.titulo_site }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block body %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="signal-icon small">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <h1 class="login-title">Painel Admin</h1>
+      <p class="login-sub">{{ cfg.titulo_site }}</p>
+    </div>
+    <form class="login-form" method="POST" action="{{ url_for('main.login') }}">
+      {% if erro %}
+      <div class="form-error">{{ erro }}</div>
+      {% endif %}
+      <div class="field">
+        <label class="field-label" for="senha">Senha de acesso</label>
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          class="field-input"
+          placeholder="••••••••"
+          autofocus
+          required
+        >
+      </div>
+      <button type="submit" class="btn btn-primary full">Entrar</button>
+    </form>
+    <a href="{{ url_for('main.index') }}" class="login-back">← Voltar ao início</a>
+  </div>
+</div>
+{% endblock %}

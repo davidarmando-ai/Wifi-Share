@@ -1,0 +1,75 @@
+{% extends "app/base.html" %}
+{% block title %}Configurações — {{ cfg.titulo_site }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block body %}
+<div class="admin-wrap">
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <div class="signal-icon small"><span></span><span></span><span></span><span></span></div>
+      <span class="sidebar-name">{{ cfg.titulo_site }}</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('main.admin') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('main.nova_rede') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nova Rede
+      </a>
+      <a href="{{ url_for('main.configuracoes') }}" class="nav-item active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configurações
+      </a>
+      <a href="{{ url_for('main.index') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Ver Site
+      </a>
+    </nav>
+    <a href="{{ url_for('main.logout') }}" class="sidebar-logout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </a>
+  </aside>
+
+  <div class="admin-content">
+    <div class="admin-topbar anim-fade">
+      <h2 class="admin-page-title">Configurações</h2>
+    </div>
+
+    <div class="form-card anim-fade-up">
+      <form method="POST" class="rede-form">
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="titulo_site">Título do site</label>
+            <input type="text" id="titulo_site" name="titulo_site" class="field-input"
+              value="{{ cfg.titulo_site }}" placeholder="WiFi Share">
+          </div>
+          <div class="field">
+            <label class="field-label" for="subtitulo">Subtítulo</label>
+            <input type="text" id="subtitulo" name="subtitulo" class="field-input"
+              value="{{ cfg.subtitulo }}" placeholder="Partilhe a sua rede com facilidade">
+          </div>
+          <div class="field">
+            <label class="field-label" for="limite_minutos">Limite por sessão (minutos)</label>
+            <input type="number" id="limite_minutos" name="limite_minutos" min="1" max="1440" class="field-input"
+              value="{{ cfg.get('limite_minutos', '30') }}" placeholder="30">
+            <span class="field-hint">Após este período, o utilizador será bloqueado</span>
+          </div>
+          <div class="field">
+            <label class="field-label" for="senha_admin">Nova senha de admin</label>
+            <input type="password" id="senha_admin" name="senha_admin" class="field-input"
+              placeholder="Deixe em branco para não alterar">
+            <span class="field-hint">Senha actual guardada na base de dados</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Guardar configurações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

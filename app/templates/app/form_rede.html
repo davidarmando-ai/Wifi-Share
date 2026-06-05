@@ -1,0 +1,118 @@
+{% extends "app/base.html" %}
+{% block title %}{% if rede %}Editar{% else %}Nova{% endif %} Rede — {{ cfg.titulo_site }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+
+{% block body %}
+<div class="admin-wrap">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <div class="signal-icon small"><span></span><span></span><span></span><span></span></div>
+      <span class="sidebar-name">{{ cfg.titulo_site }}</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('main.admin') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('main.nova_rede') }}" class="nav-item active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nova Rede
+      </a>
+      <a href="{{ url_for('main.configuracoes') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configurações
+      </a>
+      <a href="{{ url_for('main.index') }}" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Ver Site
+      </a>
+    </nav>
+    <a href="{{ url_for('main.logout') }}" class="sidebar-logout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </a>
+  </aside>
+
+  <div class="admin-content">
+    <div class="admin-topbar">
+      <div class="topbar-left">
+        <a href="{{ url_for('main.admin') }}" class="back-link">← Voltar</a>
+        <h2 class="admin-page-title">{% if rede %}Editar Rede{% else %}Nova Rede{% endif %}</h2>
+      </div>
+    </div>
+
+    <div class="form-card anim-fade-up">
+      <form method="POST" class="rede-form">
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="nome">Nome de apresentação *</label>
+            <input type="text" id="nome" name="nome" class="field-input"
+              value="{{ rede.nome if rede else '' }}"
+              placeholder="ex: WiFi do Escritório" required>
+            <span class="field-hint">Nome visível para os utilizadores</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="ssid">SSID (nome da rede) *</label>
+            <input type="text" id="ssid" name="ssid" class="field-input"
+              value="{{ rede.ssid if rede else '' }}"
+              placeholder="ex: Escritorio_5G" required>
+            <span class="field-hint">Nome exacto da rede WiFi</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="senha">Senha *</label>
+            <div class="input-icon-wrap">
+              <input type="text" id="senha" name="senha" class="field-input"
+                value="{{ rede.senha if rede else '' }}"
+                placeholder="Senha da rede" required>
+              <button type="button" class="input-eye" id="toggleSenha">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="seguranca">Tipo de segurança</label>
+            <select id="seguranca" name="seguranca" class="field-input">
+              <option value="WPA" {% if not rede or rede.seguranca == 'WPA' %}selected{% endif %}>WPA/WPA2</option>
+              <option value="WEP" {% if rede and rede.seguranca == 'WEP' %}selected{% endif %}>WEP</option>
+              <option value="nopass" {% if rede and rede.seguranca == 'nopass' %}selected{% endif %}>Aberta (sem senha)</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label class="field-label" for="descricao">Descrição (opcional)</label>
+            <textarea id="descricao" name="descricao" class="field-input" rows="3"
+              placeholder="ex: Rede disponível para todos os hóspedes...">{{ rede.descricao if rede else '' }}</textarea>
+          </div>
+
+          {% if rede %}
+          <div class="field full">
+            <label class="checkbox-wrap">
+              <input type="checkbox" name="ativa" value="1" {% if rede.ativa %}checked{% endif %}>
+              <span class="checkbox-label">Rede activa (visível no site)</span>
+            </label>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="form-actions">
+          <a href="{{ url_for('main.admin') }}" class="btn btn-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary">
+            {% if rede %}Guardar alterações{% else %}Criar rede{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('toggleSenha').addEventListener('click', function() {
+    var inp = document.getElementById('senha');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+</script>
+{% endblock %}

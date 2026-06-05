@@ -1,0 +1,69 @@
+{% extends "app/base.html" %}
+{% block title %}Acesso Bloqueado — {{ cfg.titulo_site }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">{% endblock %}
+
+{% block body %}
+<div class="public-wrap detalhe-wrap">
+
+  <header class="detalhe-header">
+    <a href="{{ url_for('main.index') }}" class="back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Voltar
+    </a>
+    <div class="signal-icon small">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <main class="detalhe-main">
+    <div class="detalhe-card bloqueado-card">
+
+      <div class="detalhe-top">
+        <div class="bloqueado-icon">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+
+        <h1 class="bloqueado-titulo">Acesso Bloqueado</h1>
+        <p class="bloqueado-desc">
+          O seu período de {{ limite }} minutos na rede <strong>{{ rede.nome }}</strong> terminou.
+          O seu acesso foi bloqueado automaticamente.
+        </p>
+      </div>
+
+      <div class="creds-section">
+        <div class="bloqueado-info">
+          <div class="info-row">
+            <span class="info-lbl">Rede</span>
+            <span class="info-val">{{ rede.ssid }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-lbl">Início</span>
+            <span class="info-val">{{ estado.iniciada_em }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-lbl">Expirou às</span>
+            <span class="info-val">{{ estado.expira_em }}</span>
+          </div>
+        </div>
+
+        <p class="bloqueado-contacto">
+          Para renovar o acesso, contacte o administrador da rede.
+        </p>
+
+        <a href="{{ url_for('main.index') }}" class="share-btn" style="text-decoration:none;display:inline-flex;width:auto;padding:12px 28px;border-radius:var(--radius-sm);margin:0 auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Voltar ao início
+        </a>
+      </div>
+
+    </div>
+  </main>
+</div>
+{% endblock %}
